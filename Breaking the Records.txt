@@ -1,0 +1,26 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+class Solution
+{
+	public static void Main() {
+		Console.ReadLine ();
+		int[] nums = Console.ReadLine ().Split (' ').Select (int.Parse).ToArray ();
+		int best = nums [0];
+		int worst = nums [0];
+		int bestCount = 0;
+		int worstCount = 0;
+		foreach (var n in nums) {
+			if (n > best) {
+				best = n;
+				bestCount++;
+			}
+			if (n < worst) {
+				worst = n;
+				worstCount++;
+			}
+		}
+		Console.WriteLine (bestCount + " " + worstCount);
+	}
+}
