@@ -1,0 +1,59 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace HackerRank_AlmostSorted
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int q = Convert.ToInt32(Console.ReadLine());
+
+            for (int a0  = 0; a0 < q; a0++)
+            {
+                int n = Convert.ToInt32(Console.ReadLine());
+                int[][] matrix = new int[2 * n][];
+
+                for (int matrix_i = 0; matrix_i < 2 * n; matrix_i++)
+                {
+                    string[] matrix_temp = Console.ReadLine().Split(' ');
+                    matrix[matrix_i] = Array.ConvertAll(matrix_temp, Int32.Parse);
+                }
+
+                int result = filppingMatrix(matrix, n);
+                Console.WriteLine(result);
+
+            }
+        }
+        static int filppingMatrix(int[][] matrix, int n)
+        {
+            int[] arrayStorage = new int[4];
+            List<int> result = new List<int>();
+
+            for (int x = 0; x < n; x++)
+                for (int y = 0; y < n; y++)
+                {
+                    arrayStorage[0] = matrix[x][y];
+                    arrayStorage[1] = matrix[2 * n - 1 - x][y];
+                    arrayStorage[2] = matrix[x][2 * n - 1 - y];
+                    arrayStorage[3] = matrix[2 * n - 1 - x][2 * n - 1 - y];
+
+                    result.Add(GetMax(arrayStorage));
+                }
+
+            return result.Sum();
+        }
+        static int GetMax(int[] array)
+        {
+            int max = array[0];
+
+            for (int x = 1; x < array.Length; x++)
+            {
+                if (array[x] > max)
+                    max = array[x];
+            }
+            return max;
+        }
+    }
+}
