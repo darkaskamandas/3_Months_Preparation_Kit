@@ -1,0 +1,30 @@
+using System;
+
+class Solution 
+{
+    static void Main(String[] args) 
+    {
+        int n = int.Parse(Console.ReadLine());
+        string steps = Console.ReadLine();
+        
+        int level = 0;
+        int valleys = 0;
+        
+        for (int i = 0; i < n; i++)
+        {
+            if (steps[i] == 'U')
+            {
+                if (++level == 0)
+                {
+                    valleys++;
+                }
+            }
+            else
+            {
+                level--;
+            }
+        }
+        
+        Console.WriteLine(valleys);
+    }
+}
