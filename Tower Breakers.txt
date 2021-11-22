@@ -1,0 +1,30 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+      int counter = int.Parse( Console.ReadLine() );
+      
+      while( counter-- > 0 )
+      {
+        int[] limits = Array.ConvertAll( Console.ReadLine().Split( ' ' ), int.Parse );
+        
+        int[] grundys = new int[ limits[ 1 ] + 1 ];
+        
+        for( int i = 2; i <= limits[ 1 ]; i++ )
+        {
+          grundys[ i ] = Math.Max( 1, grundys[ i ] );
+          int running = i + i;
+          
+          while( running <= limits[ 1 ] )
+          {
+            grundys[ running ] = Math.Max( grundys[ running ], grundys[ i ] );
+            running += i;
+          }
+        }
+        
+        bool isFirstWinning = limits[ 0 ] % 2 != 0 && grundys[ limits[ 1 ] ] != 0;
+        Console.WriteLine( isFirstWinning ? 1 : 2 );
+      }
+    }
+}
