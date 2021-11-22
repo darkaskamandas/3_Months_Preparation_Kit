@@ -1,0 +1,24 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+            static void lonely_integer()
+        {
+            int _a_size = Convert.ToInt32(Console.ReadLine());
+            bool[] IsSingle = new bool[101];
+            int[] numbers = Array.ConvertAll(Console.ReadLine().Split(' '), x => int.Parse(x));
+            foreach (int n in numbers)
+                IsSingle[n] = !IsSingle[n];
+
+            for (int i = 0; i < IsSingle.Length;i++ )
+                if (IsSingle[i])
+                {
+                    Console.WriteLine(i);
+                    break;
+                }
+        }
+
+static void Main(String[] args) {
+    lonely_integer();
+    }
+}
