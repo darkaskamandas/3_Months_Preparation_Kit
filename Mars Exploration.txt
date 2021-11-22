@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Text;
+
+class Anagrams
+{
+    static void Main()
+    {
+        
+        var alteredCharCount = 0;
+        var sosSignal = "SOS";
+        var index = 0;
+        var nextChar = Console.Read();
+        while(nextChar != -1)
+        {
+            if ((char)nextChar != sosSignal[index++])
+                alteredCharCount++;
+
+            if (index % 3 == 0)
+                index = 0;
+            nextChar = Console.Read();
+        }
+        Console.WriteLine(alteredCharCount); ;
+    }
+}
