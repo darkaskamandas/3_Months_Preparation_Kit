@@ -1,0 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int p = Convert.ToInt32(Console.ReadLine());
+        int front = p / 2;
+        int back = (n / 2) - front;
+        Console.WriteLine(Math.Min(front,back));
+    }
+}
