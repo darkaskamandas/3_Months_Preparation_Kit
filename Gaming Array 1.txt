@@ -1,0 +1,78 @@
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Result
+{
+
+    /*
+     * Complete the 'gamingArray' function below.
+     *
+     * The function is expected to return a STRING.
+     * The function accepts INTEGER_ARRAY arr as parameter.
+     */
+
+    public static string gamingArray(int[] arr)
+    {
+        var localMaxs = new List<int>();
+        for (int i = arr.Length - 1; i > 0; i--)
+        {
+            if (arr[i - 1] <= arr[i])
+                localMaxs.Add(arr[i]);
+        }
+        
+        localMaxs.Add(arr[0]);
+            
+        localMaxs.Reverse();
+        
+        var curLocalMax = localMaxs[0];
+        var turnsCount = 1;
+        for (int i = 0; i < localMaxs.Count - 1; i++)
+        {
+            if (curLocalMax <= localMaxs[i + 1])
+            {
+                turnsCount++;
+                curLocalMax = localMaxs[i + 1];
+            }
+        }
+        
+        
+        return turnsCount % 2 == 1
+            ? "BOB"
+            : "ANDY";
+    }
+}
+
+class Solution
+{
+    public static void Main(string[] args)
+    {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int g = Convert.ToInt32(Console.ReadLine().Trim());
+
+        for (int gItr = 0; gItr < g; gItr++)
+        {
+            int arrCount = Convert.ToInt32(Console.ReadLine().Trim());
+
+            int[] arr = Console.ReadLine().TrimEnd().Split(' ').ToList().Select(arrTemp => Convert.ToInt32(arrTemp)).ToArray();
+
+            string result = Result.gamingArray(arr);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
