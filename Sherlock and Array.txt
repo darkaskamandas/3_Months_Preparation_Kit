@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class SherlockAndArray {
+    static void Main(String[] args) {
+        int NumberOfTestCases = Convert.ToInt32(Console.ReadLine());
+        
+        for (int Case = 0; Case < NumberOfTestCases; Case++) {
+            // Parse Input
+            int NumberOfElements = Convert.ToInt32(Console.ReadLine());
+            string[] StringArray = Console.ReadLine().Split(' ');
+            int[] SourceArray = Array.ConvertAll(StringArray, Int32.Parse);
+
+            // Set Initial State
+            int LeftSum = 0;
+            int RightSum = SourceArray.Sum();
+            string Result = "NO";
+
+            for (int i = 0; i < NumberOfElements; i++) {
+                RightSum -= SourceArray[i];
+                if (LeftSum == RightSum) {
+                    Result = "YES";
+                    break;
+                }
+                LeftSum += SourceArray[i];
+            }
+            // Console
+            Console.WriteLine(Result);
+        }
+    }
+}
