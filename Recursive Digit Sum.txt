@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
+class Solution
+{
+    static void Main(String[] args)
+    {
+        string[] parts = Console.ReadLine().Split(' ');
+        string n = parts[0];
+        long k = Convert.ToInt64(parts[1]);
+
+        long p = 0;
+        for (int i = 0; i < n.Length; i++)
+        {
+            p += ((int)(n[i] - '0') * k);
+        }
+        Console.WriteLine(Calculate(p));
+    }
+
+    static long Calculate(long p)
+    {
+        if (p < 10) return p;
+
+        long temp = 0;
+        while (p > 0)
+        {
+            temp += p % 10;
+            p /= 10;
+        }
+        return Calculate(temp);
+    }
+}
