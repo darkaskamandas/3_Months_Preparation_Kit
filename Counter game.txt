@@ -1,0 +1,73 @@
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Result
+{
+
+    /*
+     * Complete the 'counterGame' function below.
+     *
+     * The function is expected to return a STRING.
+     * The function accepts LONG_INTEGER n as parameter.
+     */
+
+    public static string counterGame(long n)
+    {
+        var player = false;
+        var bits = new List<long>();
+        while(n!= 0){
+            bits.Add(n%2);
+            n = n/2;
+        }
+         bits.Reverse();
+        while(bits.Where(b => b == 1).Count() != 1){
+            player = !player;
+            var idx11 = bits.FindIndex(0, bits.Count, (b => b == 1));
+            bits[idx11] = 0;
+        }
+        bits.Reverse();
+        var idx = bits.FindIndex(0, bits.Count, (b => b == 1));
+        //var pw =Math.Abs((bits.Count - 1) - idx);
+        if(idx !=0  ){
+            player = !player;
+        }
+        if((idx > 0 && idx%2 == 0)){
+            player = !player;
+        }
+        return player ? "Louise" : "Richard";
+    }
+
+}
+
+class Solution
+{
+    public static void Main(string[] args)
+    {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int t = Convert.ToInt32(Console.ReadLine().Trim());
+
+        for (int tItr = 0; tItr < t; tItr++)
+        {
+            long n = Convert.ToInt64(Console.ReadLine().Trim());
+
+            string result = Result.counterGame(n);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
