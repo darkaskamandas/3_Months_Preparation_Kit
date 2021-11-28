@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int T = int.Parse(Console.ReadLine());
+        
+        List<List<int>> prices = new List<List<int>>();
+        
+        for(int i = 0; i < T; i++){
+            int N = int.Parse(Console.ReadLine());
+            prices.Add(  Console.ReadLine().Split().Select( x=> int.Parse(x)  ).ToList() ); 
+        }
+        
+        for(int i = 0; i < T; i++){
+            
+            List<int> p = prices[i];
+            long profit = 0;
+            int maxp = 900001;
+            List<int> maxes = new List<int>();
+            maxes.Add(p[p.Count-1]);
+            for(int j = p.Count-2; j>=0 ;j-- ){
+                maxes.Insert(0 , Math.Max( maxes[0], p[j]) );
+            }
+            for(int j = 0; j < p.Count()-1 ; j++){
+                
+                maxp = Math.Min( maxes[j], maxp);
+                profit += maxp -p[j];
+            }
+            Console.WriteLine(profit);
+            
+        }
+    }
+}
