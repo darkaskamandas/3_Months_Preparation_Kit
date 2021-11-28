@@ -1,0 +1,120 @@
+using System;
+using System.Linq;
+
+class Node
+{
+    private int Data;
+    private Node Next;
+
+    public static Node Insert(Node head, int data)
+    {
+        var temp = new Node {Data = data, Next = null};
+
+        if (head == null)
+            return temp;
+
+        var cur = head;
+        while (cur.Next != null)
+            cur = cur.Next;
+        cur.Next = temp;
+        return head;
+    }
+
+    public static void Print(Node head)
+    {
+        while (head != null)
+        {
+            Console.Write(head.Data + " ");
+            head = head.Next;
+        }
+    }
+
+    /* Head ends here*/
+
+    /*
+      Reverse a linked list and return pointer to the head
+      The input list will have at least one element
+      Node is defined as
+      class Node {
+         int Data;
+         Node Next;
+      }
+    */
+
+    public static Node Reverse(Node head)
+    {
+        if (head == null)
+            return null;
+        var second = head.Next;
+        if (second == null)
+            return head;
+        var result = Reverse(second);
+        second.Next = head;
+        head.Next = null;
+        return result;
+    }
+
+    /*Tail Begins*/
+
+    public static Node ReverseHidden(Node head)
+    {
+        if (head == null)
+            return null;
+        var first = head;
+        var rest = head.Next;
+        if (rest == null)
+            return head;
+        rest = ReverseHidden(rest);
+        first.Next.Next = head;
+        first.Next = null;
+        return rest;
+    }
+
+    public static bool Check(Node head1, Node head2)
+    {
+        if (head1 == null && head2 == null)
+            return true;
+        if (head1 == null)
+            return false;
+        if (head2 == null)
+            return false;
+        if (head1.Data != head2.Data)
+            return false;
+        return Check(head1.Next, head2.Next);
+    }
+
+}
+
+class Solution
+{
+    static void Main(string[] args)
+    {
+        var t = int.Parse(Console.ReadLine());
+        while (t-- > 0)
+        {
+            Node head = null;
+            Node head2 = null;
+            var n = int.Parse(Console.ReadLine());
+            if (n != 0)
+            {
+                var arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+                for (var i = 0; i < n; i++)
+                {
+                    head = Node.Insert(head, arr[i]);
+                    head2 = Node.Insert(head2, arr[i]);
+                }
+            }
+
+            head = Node.Reverse(head);
+            head2 = Node.ReverseHidden(head2);
+
+            if (Node.Check(head, head2))
+                Console.WriteLine("Right Answer!");
+            else
+            {
+                Console.WriteLine("Wrong Answer!");
+                Console.WriteLine("Some possible errors:\n1. You returned a NULL value from the function. \n2. There is a problem with your logic");
+            }
+        }
+    }
+}
