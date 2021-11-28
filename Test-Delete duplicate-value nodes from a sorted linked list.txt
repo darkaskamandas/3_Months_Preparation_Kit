@@ -1,0 +1,80 @@
+using System;
+using System.Linq;
+
+class Node
+{
+    private int Data;
+    private Node Next;
+
+    public static Node Insert(Node head, int data)
+    {
+        var temp = new Node {Data = data, Next = null};
+
+        if (head == null)
+            return temp;
+
+        var cur = head;
+        while (cur.Next != null)
+            cur = cur.Next;
+        cur.Next = temp;
+        return head;
+    }
+
+    public static void Print(Node head)
+    {
+        while (head != null)
+        {
+            Console.Write(head.Data + " ");
+            head = head.Next;
+        }
+    }
+
+    /* Head ends here*/
+
+    /*
+      Remove all duplicate elements from a sorted linked list
+      Node is defined as
+      class Node {
+         int Data;
+         Node Next;
+      }
+    */
+
+    public static Node RemoveDuplicates(Node head)
+    {
+        // This is a "method-only" submission.
+        // You only need to complete this method.
+        var cur = head;
+        while (cur != null)
+        {
+            while (cur.Next != null && cur.Data == cur.Next.Data)
+                cur.Next = cur.Next.Next;
+            cur = cur.Next;
+        }
+        return head;
+    }
+
+    /*Tail Begins*/
+}
+
+class Solution
+{
+    static void Main()
+    {
+        var t = int.Parse(Console.ReadLine());
+        while (t-- > 0)
+        {
+            Node head = null;
+            var n = int.Parse(Console.ReadLine());
+            if (n != 0)
+            {
+                var arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+                for (var i = 0; i < n; i++)
+                    head = Node.Insert(head, arr[i]);
+            }
+            head = Node.RemoveDuplicates(head);
+            Node.Print(head);
+            Console.WriteLine();
+        }
+    }
+}
