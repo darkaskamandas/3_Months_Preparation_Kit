@@ -1,0 +1,70 @@
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the alternate function below.
+    static int alternate(string s) {
+        string alphabet = "abcdefghijklmnopqrstuvwxyz";
+            int maxLength = 0;
+            for (int i = 0; i < alphabet.Length; i++)
+            {
+                for (int j = i+1; j < alphabet.Length; j++)
+                {
+                    char x = alphabet[i];
+                    char y = alphabet[j];
+                    string twoChars = "";
+                    for (int k = 0; k < s.Length; k++)
+                    {
+                        if (s[k]==x || s[k]==y)
+                        {
+                            twoChars += s[k];
+                        }
+                    }
+
+                    bool alternating = true;
+                    for (int k = 0; k < twoChars.Length-1; k++)
+                    {
+                        if (twoChars[k]==twoChars[k+1])
+                        {
+                            alternating = false;
+                        }
+                    }
+                    if ((alternating) && twoChars.Length>1)
+                    {
+                        maxLength = Math.Max(maxLength, twoChars.Length);
+                    }
+
+                }
+            } 
+            return maxLength;
+
+
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int l = Convert.ToInt32(Console.ReadLine().Trim());
+
+        string s = Console.ReadLine();
+
+        int result = alternate(s);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
