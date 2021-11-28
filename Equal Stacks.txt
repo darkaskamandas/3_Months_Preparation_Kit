@@ -1,0 +1,63 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        string[] line = Console.ReadLine().Split(' ');
+        int N1 = Int32.Parse(line[0]);
+        int N2 = Int32.Parse(line[1]);
+        int N3 = Int32.Parse(line[2]);
+        int[] arr1 = new int[N1];
+        int[] arr2 = new int[N2];
+        int[] arr3 = new int[N3];
+        int tot1 = 0;
+        int tot2 = 0;
+        int tot3 = 0;
+        line = Console.ReadLine().Split(' ');
+        for(int i=0; i<N1; i++) {
+            arr1[i] = Int32.Parse(line[i]);
+            tot1+=arr1[i];
+        }
+        line = Console.ReadLine().Split(' ');
+        for(int i=0; i<N2; i++) {
+            arr2[i] = Int32.Parse(line[i]);
+            tot2+=arr2[i];
+        }
+        line = Console.ReadLine().Split(' ');
+        for(int i=0; i<N3; i++) {
+            arr3[i] = Int32.Parse(line[i]);
+            tot3+=arr3[i];
+        }
+        int i1 = 0;
+        int i2 = 0;
+        int i3 = 0;
+        while(tot1 != tot2 || tot2 != tot3) {
+            if(tot1 > tot2 && tot1 > tot3) {
+                tot1 -= arr1[i1];
+                i1++;
+            } else if(tot2 > tot1 && tot2 > tot3) {
+                tot2 -= arr2[i2];
+                i2++;
+            } else if(tot3 > tot1 && tot3 > tot2) {
+                tot3 -= arr3[i3];
+                i3++;
+            } else if(tot1 > tot3 && tot2 > tot3) {
+                tot1 -= arr1[i1];
+                i1++;
+                tot2 -= arr2[i2];
+                i2++;
+            } else if(tot1 > tot2 && tot3 > tot2) {
+                tot1 -= arr1[i1];
+                i1++;
+                tot3 -= arr3[i3];
+                i3++;
+            } else {
+                tot2 -= arr2[i2];
+                i2++;
+                tot3 -= arr3[i3];
+                i3++;                
+            }
+        }
+        Console.WriteLine(tot1);
+    }
+}
