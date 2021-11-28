@@ -1,0 +1,56 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int q = Convert.ToInt32(Console.ReadLine());
+        Stack<int> op_stack= new Stack<int>();
+        Stack<String> str_stack= new Stack<String>();
+        string mainStr = string.Empty;
+        int  k;
+        while(q-- > 0)
+            {
+            
+            String[] str_temp = Console.ReadLine().Split(' ');
+            int opt = Convert.ToInt32(str_temp[0]);
+            
+            switch(opt)
+                {
+                case 1:
+                      string tmp = str_temp[1];
+                      op_stack.Push(opt);
+                      str_stack.Push(tmp);
+                      mainStr += tmp;
+                   break;
+                case 2:
+                     k = Convert.ToInt32(str_temp[1]);
+                     string tmp1 = mainStr.Substring(mainStr.Length-k,k);
+                     mainStr =  mainStr.Substring(0,mainStr.Length - k);
+                
+                      op_stack.Push(opt);
+                      str_stack.Push(tmp1);
+                   break;
+                case 3:
+                     k = Convert.ToInt32(str_temp[1]);
+                     Console.WriteLine(mainStr[k-1]);
+                   break;
+                case 4:
+                      int op = op_stack.Pop();
+                      string tempStr = str_stack.Pop();                     
+                      if(op == 1) 
+                          { 
+                          k = tempStr.Length;
+                          mainStr =  mainStr.Substring(0,mainStr.Length - k);                          
+                      }
+                   else if(op == 2)
+                       {
+                      mainStr += tempStr;
+                   }                     
+                   break;
+                default:
+                   break;
+            }
+        }
+    }
+}
