@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static List<int> primes = new List<int>();
+    
+    static void GetNextPrime(){
+        if (primes.Count == 0){
+            primes.Add(2);
+        }
+        else if (primes.Count == 1){
+            primes.Add(3);
+        }
+        else{
+            for (int p = primes[primes.Count-1]+2; ; p+=2){
+                int i = 1;
+                for (; primes[i] < p/2 && p%primes[i]!=0 ; i++);
+                if (primes[i] >= p/2){
+                    primes.Add(p);
+                    break;
+                }
+            }
+        }
+    }
+    
+    static void Main(String[] args) {
+        args = Console.ReadLine().Split();
+        int Q = int.Parse(args[1]);
+        List<Stack<int>> ls = new List<Stack<int>>();
+        ls.Add(new Stack<int>());
+        foreach(string num in Console.ReadLine().Split()) ls[0].Push(int.Parse(num));
+        int count = 0;
+        for (int i = 0; ++count <= Q; i += 2){
+            GetNextPrime();
+            int prime = primes[primes.Count-1];
+            ls.Add(new Stack<int>());
+            ls.Add(new Stack<int>());
+            while (ls[i].Count > 0){
+                int num = ls[i].Pop();
+                if (num%prime == 0) ls[i+1].Push(num);
+                else ls[i+2].Push(num);
+            }
+        }
+        for (int i = 1; i < ls.Count; i += 2){
+            while (ls[i].Count > 0) Console.WriteLine(ls[i].Pop());
+        }
+        while (ls[ls.Count-1].Count > 0) Console.WriteLine(ls[ls.Count-1].Pop());
+    }
+}
