@@ -1,0 +1,77 @@
+using System;
+using System.Text;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        var c = int.Parse(Console.ReadLine());
+        var stack = new MyStack();
+        var sb = new StringBuilder();
+        for (var i = 0; i < c; i++)
+        {
+            var a = Array.ConvertAll(Console.ReadLine().Split(' '), int.Parse);
+            switch (a[0])
+            {
+                case 1:
+                stack.Enqueue(a[1]);
+                break;
+                case 2:
+                stack.Dequeue();
+                break;
+                case 3:
+                stack.PrintFront(sb);
+                break;
+            }
+        }
+        
+        Console.WriteLine(sb.ToString());
+    }
+    
+    class MyStack
+    {
+        Stack<int> main = new Stack<int>();
+        Stack<int> slave = new Stack<int>();
+        int front;
+
+        public void Enqueue(int x)
+        {
+            main.Push(x);
+
+            if (main.Count == 1 && slave.Count == 0) front = x;
+        }
+
+        public void Dequeue()
+        {
+            if (slave.Count == 0)
+            {
+                while (main.Count != 0)
+                {
+                    slave.Push(main.Pop());
+                }
+            }
+
+            slave.Pop();
+
+            if (slave.Count > 0)
+                front = slave.Peek();
+            else
+            {
+                if (main.Count != 0)
+                {
+                    while (main.Count != 0)
+                    {
+                        slave.Push(main.Pop());
+                    }
+
+                    front = slave.Peek();
+                }
+            }
+        }
+
+        public void PrintFront(StringBuilder sb)
+        {
+            sb.AppendLine(front.ToString());
+        }
+    }
+
+}
