@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+class Solution {
+    static public void CheckBalance(string testStr)
+    {
+	bool bBalanced=true;
+        StringBuilder stackStr = new StringBuilder();
+
+	
+	for(int i=0;i<testStr.Length;i++)
+	{
+           switch(testStr[i])
+           {
+		case '(':
+		   stackStr.Append(')');
+                  break;
+		case '[':
+		   stackStr.Append(']');
+                  break;
+		case '{':
+		   stackStr.Append('}');
+                  break;
+		case ')':
+               case '}':
+               case ']':
+		   if(stackStr.Length<1)
+		   {
+			bBalanced=false;
+			break;
+		   }
+			
+		   char lastChar = stackStr[stackStr.Length-1];
+		   if(lastChar!=testStr[i])
+		   {
+	               bBalanced = false;
+                  }
+                  else
+	           {
+                     stackStr.Length = stackStr.Length-1;
+                   }
+                  break;
+	     }
+	     if(!bBalanced)
+	     {
+		    break;
+	     }
+
+	}
+
+
+	if(stackStr.Length>0)
+	{
+	   bBalanced = false;
+	}
+
+	Console.WriteLine( bBalanced ? "YES" : "NO");      
+    }
+
+    static void Main(String[] args) {
+         string numLinesStr = Console.ReadLine();
+         int numLines =  Convert.ToInt32(numLinesStr);
+         for(int iLine=0;iLine<numLines;iLine++)
+         {
+            string testStr = Console.ReadLine();
+            CheckBalance(testStr);
+         }
+    }
+}
