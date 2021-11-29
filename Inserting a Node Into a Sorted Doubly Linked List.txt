@@ -1,0 +1,111 @@
+using System;
+using System.Linq;
+
+class Node
+{
+	public int Data;
+	public Node Next;
+	public Node Prev;
+
+	/* Head ends here*/
+
+	/*
+		Insert Node in a doubly sorted linked list 
+	    After each insertion, the list should be sorted
+		Node is defined as
+		class Node {
+			int Data;
+			Node Next;
+			Node Prev;
+		}
+	*/
+
+	public static Node SortedInsert(Node head, int data)
+	{
+        return Node.SortedInsertHidden(head,data);
+		// Complete this function
+		// Do not write the main method.
+	}
+
+	/*Tail Begins*/
+
+	public static Node SortedInsertHidden(Node head, int data)
+	{
+		Node n = new Node();
+		n.Data = data;
+		n.Next = null;
+		n.Prev = null;
+
+		if (head == null)
+			return n;
+		if (head.Data > data)
+		{
+
+			n.Next = head;
+			head.Prev = n;
+			return n;
+		}
+
+		var temp = head;
+
+		while (temp.Next != null)
+		{
+			if (temp.Next.Data > data)
+			{
+				n.Next = temp.Next;
+				n.Prev = temp.Next.Prev;
+				temp.Next = n;
+				n.Next.Prev = n;
+				return head;
+			}
+			temp = temp.Next;
+		}
+
+		temp.Next = n;
+		n.Prev = temp;
+		return head;
+	}
+
+	public static bool Check(Node head1, Node head2)
+	{
+		if (head1 == null && head2 == null)
+			return true;
+		if (head1 == null)
+			return false;
+		if (head2 == null)
+			return false;
+		if (head1.Data != head2.Data)
+			return false;
+		return Check(head1.Next, head2.Next);
+	}
+}
+
+
+class Solution
+{
+	static void Main(string[] args)
+	{
+		var t = int.Parse(Console.ReadLine());
+		while (t-- > 0)
+		{
+			var x = int.Parse(Console.ReadLine());
+			Node head = new Node();
+			Node head2 = new Node();
+			var arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+			for (var i = 0; i < x; i++)
+			{
+				var y = arr[i];
+				head = Node.SortedInsert(head, y);
+				head2 = Node.SortedInsertHidden(head2, y);
+			}
+
+			if (Node.Check(head, head2))
+				Console.WriteLine("Right Answer!");
+			else
+			{
+				Console.WriteLine("Wrong Answer!");
+				Console.WriteLine("Some possible errors:\n1. You returned a NULL value from the function. \n2. There is a problem with your logic");
+			}
+		}
+	}
+}
