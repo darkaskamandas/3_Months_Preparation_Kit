@@ -1,0 +1,110 @@
+using System;
+using System.Linq;
+
+class Node
+{
+	public int Data;
+	public Node Next;
+	public Node Prev;
+
+	/* Head ends here*/
+
+	/*
+		Reverse a doubly linked list, input list may also be empty
+		Node is defined as
+		class Node
+		{
+			int Data;
+			Node Next;
+			Node Prev;
+		}
+	*/
+
+	public static Node Reverse(Node head)
+	{
+        return Node.ReverseHidden(head);
+		// Complete this function
+		// Do not write the main method.
+	}
+
+	/*Tail Begins*/
+
+	public static Node ReverseHidden(Node head)
+	{
+		if (head == null)
+			return null;
+
+		if (head.Next == null)
+			return head;
+
+		var temp = head;
+		for (var next = temp.Next; next != null; next = next.Next)
+		{
+			temp.Next = temp.Prev;
+			temp.Prev = next;
+			temp = next;
+		}
+
+		temp.Next = temp.Prev;
+		temp.Prev = null;
+		return temp;
+	}
+
+	public static bool Check(Node head1, Node head2)
+	{
+		if (head1 == null && head2 == null)
+			return true;
+		if (head1 == null)
+			return false;
+		if (head2 == null)
+			return false;
+		if (head1.Data != head2.Data)
+			return false;
+		return Check(head1.Next, head2.Next);
+	}
+
+	public static Node Insert(Node head, int data)
+	{
+		Node temp = new Node();
+		temp.Data = data; temp.Prev = null; temp.Next = null;
+		if (head == null) return temp;
+		head.Prev = temp;
+		temp.Next = head;
+		return temp;
+	}
+}
+
+
+class Solution
+{
+	static void Main(string[] args)
+	{
+		var t = int.Parse(Console.ReadLine());
+		while (t-- > 0)
+		{
+			var x = int.Parse(Console.ReadLine());
+			Node head = new Node();
+			Node head2 = new Node();
+            if (x != 0)
+            {
+                var arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+                for (var i = 0; i < x; i++)
+                {
+                    var y = arr[i];
+                    head = Node.Insert(head, y);
+                    head2 = Node.Insert(head2, y);
+                }
+            }
+			head = Node.Reverse(head);
+			head2 = Node.ReverseHidden(head2);
+
+			if (Node.Check(head, head2))
+				Console.WriteLine("Right Answer!");
+			else
+			{
+				Console.WriteLine("Wrong Answer!");
+				Console.WriteLine("Some possible errors:\n1. You returned a NULL value from the function. \n2. There is a problem with your logic");
+			}
+		}
+	}
+}
