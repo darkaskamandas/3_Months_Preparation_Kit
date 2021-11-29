@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+
+class Node
+{
+    private int Data;
+    public Node Next;
+
+    /* Head ends here*/
+
+    /*
+      Detect a cycle in a linked list. Note that the head pointer may be 'NULL' if the list is empty.
+      Node is defined as
+      class Node {
+         int Data;
+         Node Next;
+      }
+    */
+
+    public static bool HasCycle(Node head)
+    {
+        // Complete this function
+        // Do not write the main method
+        var s = new HashSet<Node>();
+        while (head != null)
+        {
+            if (s.Contains(head))
+                return true;
+            s.Add(head);
+            head = head.Next;
+        }
+        return false;
+    }
+
+    /*Tail Begins*/
+}
+
+class Solution
+{
+    static void Main()
+    {
+        var a = new Node(); var b = new Node(); var c = new Node(); var d = new Node(); var e = new Node(); var f = new Node();
+        // case 1:  NULL list
+        Console.WriteLine(Node.HasCycle(null) ? 1 : 0);
+        //case 2:
+        a.Next = b;
+        b.Next = c;
+        c.Next = a;
+        Console.WriteLine(Node.HasCycle(a) ? 1 : 0);
+        //case 3:
+        a.Next = b; b.Next = c; c.Next = d; d.Next = e; e.Next = f; f.Next = e;
+        Console.WriteLine(Node.HasCycle(a) ? 1 : 0);
+        //case 4:
+        a.Next = b; b.Next = c; c.Next = d; d.Next = e; e.Next = f; f.Next = null;
+        Console.WriteLine(Node.HasCycle(a) ? 1 : 0);
+        // case 5:
+        a.Next = b; b.Next = c; c.Next = d; d.Next = e; e.Next = f; f.Next = a;
+        Console.WriteLine(Node.HasCycle(a) ? 1 : 0);
+    }
+}
