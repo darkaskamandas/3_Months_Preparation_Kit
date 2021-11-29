@@ -1,0 +1,100 @@
+using System;
+using System.Linq;
+
+class Node
+{
+    private int Data;
+    private Node Next;
+
+    public static Node Insert(Node head, int data)
+    {
+        var temp = new Node {Data = data, Next = null};
+
+        if (head == null)
+            return temp;
+
+        var cur = head;
+        while (cur.Next != null)
+            cur = cur.Next;
+        cur.Next = temp;
+        return head;
+    }
+
+    public static void Print(Node head)
+    {
+        while (head != null)
+        {
+            Console.Write(head.Data + " ");
+            head = head.Next;
+        }
+    }
+
+    /* Head ends here*/
+
+    /*
+      Merge two sorted lists A and B as one linked list
+      Node is defined as
+      class Node {
+         int Data;
+         Node Next;
+      }
+    */
+
+    public static Node MergeLists(Node headA, Node headB)
+    {
+        // This is a "method-only" submission.
+        // You only need to complete this method
+        var result = new Node();
+        var head = result;
+        while (headA != null && headB != null)
+        {
+            if (headA.Data < headB.Data)
+            {
+                result.Next = headA;
+                headA = headA.Next;
+            }
+            else
+            {
+                result.Next = headB;
+                headB = headB.Next;
+            }
+            result = result.Next;
+        }
+        if (headA != null)
+            result.Next = headA;
+        else if (headB != null)
+            result.Next = headB;
+        return head.Next;
+    }
+
+    /*Tail Begins*/
+}
+
+class Solution
+{
+    static void Main(string[] args)
+    {
+        var t = int.Parse(Console.ReadLine());
+        while (t-- > 0)
+        {
+            Node head = null;
+            var n = int.Parse(Console.ReadLine());
+            if (n != 0)
+            {
+                var arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+                for (var i = 0; i < n; i++)
+                    head = Node.Insert(head, arr[i]);
+            }
+            Node head2 = null;
+            n = int.Parse(Console.ReadLine());
+            if (n != 0)
+            {
+                var arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+                for (var i = 0; i < n; i++)
+                    head2 = Node.Insert(head2, arr[i]);
+            }
+            Node.Print(Node.MergeLists(head, head2));
+            Console.WriteLine();
+        }
+    }
+}
