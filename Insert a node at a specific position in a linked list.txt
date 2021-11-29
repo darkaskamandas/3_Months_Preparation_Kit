@@ -1,0 +1,28 @@
+    /*
+      Insert Node at a given position in a linked list
+      head can be NULL
+      First element in the linked list is at position 0
+      Node is defined as
+      class Node {
+         int Data;
+         Node Next;
+      }
+    */
+
+    // This is a "method-only" submission.
+    // You only need to complete this method.
+
+    public static Node InsertNth(Node head, int data, int position)
+    {
+        if (head == null || position == 0)
+            return new Node {Data = data, Next = head};
+        var count = 1;
+        var node = head;
+        while (node.Next != null && count < position){
+            node = node.Next;
+            ++count;
+        }
+        var next = node.Next;
+        node.Next = new Node {Data = data, Next = next};
+        return head;
+    }
