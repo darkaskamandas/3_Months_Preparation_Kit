@@ -1,0 +1,42 @@
+using System;
+class Solution
+{
+    static int IP(string v)
+    {
+        int r = 0;
+        foreach (char c in v) r = 10 * r + (c - 48);
+        return r;
+    }
+    static void Main(String[] args)
+    {
+        string[] S = Console.ReadLine().Split(' ');
+        int K = int.Parse(S[1]);
+        S = Console.ReadLine().Split(' ');
+        int[] Ar = new int[S.Length];
+        for (int i = 0; i < S.Length; i++)
+        {
+            Ar[i] = IP(S[i]);
+        }
+        Array.Sort(Ar);
+
+        int count = 0, b = 1;
+        for (int g = 0; g < Ar.Length - 1; g++)
+        {
+            for (int h = b; h < Ar.Length; h++)
+            {
+                if (Ar[h] - Ar[g] == K)
+                {
+                    count++;
+                    b = h;
+                    break;
+                }
+                if (Ar[h] - Ar[g] > K)
+                {
+                    b = h;
+                    break;
+                }
+            }
+        }
+        Console.WriteLine(count);
+    }
+}
