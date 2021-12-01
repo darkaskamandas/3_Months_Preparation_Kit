@@ -1,0 +1,89 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        string[] temp = Console.ReadLine().Split(' ');
+        int N = Convert.ToInt32(temp[0]);
+        int K = Convert.ToInt32(temp[1]);
+        
+        temp = Console.ReadLine().Split(' ');
+        long[] input = new long[N];
+
+        for (int i = 0; i < N; ++i)
+            input[i] = Convert.ToInt64(temp[i]);
+
+        int ops = Cook(input, K);
+        
+        Console.WriteLine(ops.ToString());
+    }
+    
+    static long? GetSmallestItem(long[] input, ref int index, Queue<long> queue)
+    {
+        if (index == input.Length)
+        {
+            if (queue.Count == 0)
+                return null;
+
+            return queue.Dequeue();
+        }
+        else
+        {
+            long arrayValue = input[index];
+
+            if (queue.Count == 0)
+            {
+                index++;
+                return arrayValue;
+            }
+
+            long queueValue = queue.Peek();
+            if (queueValue <= arrayValue)
+            {
+                queue.Dequeue();
+                return queueValue;
+            }
+
+            index++;
+            return arrayValue;
+        }
+    }
+
+    static int Cook(long[] input, int K)
+    {
+        Array.Sort(input);
+
+        Queue<long> queue = new Queue<long>();
+
+        bool done = false;
+        int operations = 0;
+        int index = 0;
+
+        while (!done)
+        {
+            // get the first smallest item, if >= K, stop, we're done
+            long? cookie1 = GetSmallestItem(input, ref index, queue);
+            if (!cookie1.HasValue)
+                throw new Exception("no first item found!");
+
+            if (cookie1.Value >= K)
+            {
+                done = true;
+                break;
+            }
+
+            // get the second smallest item, if can't, stop, we're done
+            long? cookie2 = GetSmallestItem(input, ref index, queue);
+            if (!cookie2.HasValue)
+                break;
+
+            long resultCookie = cookie1.Value + 2 * cookie2.Value;
+            queue.Enqueue(resultCookie);
+
+            operations++;
+        }
+
+        return done ? operations : -1;
+    }
+}
