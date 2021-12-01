@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+class Solution {
+    static void Main(String[] args) {
+        string[] temp = Console.ReadLine().Split(' ');
+        int N = Convert.ToInt32(temp[0]);
+        int Q = Convert.ToInt32(temp[1]);
+        
+        int[] input = new int[N];
+        temp = Console.ReadLine().Split(' ');
+        
+        for (int i = 0; i < N; ++i)
+            input[i] = Convert.ToInt32(temp[i]);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        int[] Ds = new int[Q];
+        for (int i = 0; i < Q; ++i)
+            Ds[i] = Convert.ToInt32(Console.ReadLine());
+        
+        for (int i = 0; i < Q; ++i)
+            sb.AppendLine(GetSubSequenceMax(input, Ds[i]).ToString());
+            
+        Console.WriteLine(sb.ToString());
+    }
+    
+    static int GetSubSequenceMax(int[] input, int D) {
+        int max = 0;
+        for (int i = 0; i < D; ++i)
+            max = Math.Max(max, input[i]);
+        
+        int start = 0;
+        int min = max;
+        
+        for (int i = D; i < input.Length; ++i) {
+            if (input[i] >= max)
+                max = input[i];
+            if (input[start] == max) {
+                max = 0;
+                for (int j = start+1; j <= start+D; ++j)
+                    max = Math.Max(max, input[j]);
+            }
+            
+            min = Math.Min(min, max);
+            start++;
+        }
+        
+        return min;
+    }
+}
