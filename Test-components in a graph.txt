@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    
+    private sealed class UnionFind {
+        private readonly int[] store;
+        private readonly int[] size;
+        
+        public UnionFind(int count) {
+            store = new int[count];
+            size = new int[count];
+            for(int i = 0; i < count; i++) {
+                store[i] = i;
+                size[i] = 1;
+            }
+        }
+        
+        public void union(int a, int b) {
+            var componentA = find(a);
+            var componentB = find(b);
+            if (componentA == componentB) return;
+            if (size[componentB] > size[componentA]) {
+                store[componentA] = componentB;
+                size[componentB] += size[componentA];
+            } else {
+                store[componentB] = componentA;
+                size[componentA] += size[componentB];
+            }
+        }
+        
+        public int find(int v) {
+            int parent = v;
+            while(store[parent] != parent) {
+                parent = store[parent];
+            }
+            return parent;
+        }
+        
+        public void getMinAndMaxComponentSizes(out int min, out int max) {
+            min = size.Length;
+            max = 0;
+            
+            for(int c = 1; c < size.Length; c++) {
+                //Console.Write(store[c] + ":" + size[c] + " ");
+                if (store[c] != c || size[c] == 1) continue; // not component
+                if (size[c] < min) min = size[c];
+                if (size[c] > max) max = size[c];
+            }
+            //Console.WriteLine();
+        }
+        
+    }
+    
+    static void Main(String[] args) {
+        int n = int.Parse(Console.ReadLine());
+        var uf = new UnionFind(2*n + 1);
+        
+        for(int i = 0; i < n; i++) {
+            var verticies = Console.ReadLine().Split(new [] {' '});
+            var a = int.Parse(verticies[0]);
+            var b = int.Parse(verticies[1]);
+            uf.union(a, b);
+        }
+        int min = 1;
+        int max = 0;
+        uf.getMinAndMaxComponentSizes(out min, out max);
+        Console.WriteLine(min + " " + max);
+    }
+}
