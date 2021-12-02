@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        var trie = new RWay();
+        
+        var count = Convert.ToInt32(Console.ReadLine());
+        while(count-- > 0){
+            var line = Console.ReadLine();
+
+            if(!TryInsert(trie, line)){
+                Console.WriteLine("BAD SET");
+                Console.WriteLine(line);
+                return;
+            }
+        }
+        
+        Console.WriteLine("GOOD SET");
+    }
+    
+    static bool TryInsert(RWay trie, String s){
+        for(int i = 0; i < s.Length; i++){
+            
+            var @char = s[i];
+            var idx = GetIndex(@char);
+            
+            trie.children = (trie.children ?? new RWay[RWay.Len]);
+            
+            var next = trie.children[idx];
+            if(next == null) {   
+                next = new RWay();
+                trie.children[idx] = next;
+            }
+            else if(next.leaf){
+                return false;
+            }
+            else if(i == (s.Length - 1)){
+                return false;
+            }
+            
+            trie = next;
+        }
+        
+        trie.leaf = true;
+        trie.value = s;
+        
+        return true;
+    }
+    
+    static int GetIndex(char @char){
+        return @char - RWay.Min; 
+    }
+    
+    class RWay{
+        public const char Min = 'a';
+        public const char Max = 'z';
+        public const int Len = Max - Min;
+        
+        public String value;
+        public bool leaf;
+        public RWay[] children;
+    }
+}
