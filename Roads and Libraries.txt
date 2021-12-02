@@ -1,0 +1,77 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution
+{    
+    class City
+    {
+        public List<City> n;
+        public int c;
+
+        public City()
+        {
+            n = new List<City>();
+        }
+    }
+
+    static void Main(String[] args)
+    {
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        while (q-- > 0)
+        {
+            string[] sa = Console.ReadLine().Split(' ');
+            int[] ia = Array.ConvertAll(sa, Int32.Parse);
+            long n = ia[0];
+            long m = ia[1];
+            long l = ia[2];
+            long r = ia[3];
+
+            City[] c = new City[n];
+
+            for (int i = 0; i < n; ++i)
+            {
+                c[i] = new City();
+            }
+
+                for (int i = 0; i < m; ++i)
+                {
+                    string[] sa2 = Console.ReadLine().Split(' ');
+                    int[] ia2 = Array.ConvertAll(sa2, Int32.Parse);
+
+                    c[ia2[0] - 1].n.Add(c[ia2[1] - 1]);
+                    c[ia2[1] - 1].n.Add(c[ia2[0] - 1]);
+                }
+            int nr = 0;
+            for(int i = 0; i < c.Count(); ++i)
+            {
+                if(c[i].c == 0)
+                {
+                    nr++;
+                    c[i].c = nr;
+                    Queue<City> qu = new Queue<City>();
+                    qu.Enqueue(c[i]);
+                    while(qu.Any())
+                    {
+                        City t = qu.Dequeue();
+                        foreach(City ne in t.n)
+                        {
+                            if (ne.c == 0)
+                            {
+                                ne.c = nr;
+                                qu.Enqueue(ne);
+                            }
+                        }
+                    }
+                }
+            }
+
+            long c1 = nr * l + (c.Count() - nr) * r;
+            long c2 = c.Count() * l;
+
+            Console.WriteLine(Math.Min(c1, c2));
+        }
+    }
+}
