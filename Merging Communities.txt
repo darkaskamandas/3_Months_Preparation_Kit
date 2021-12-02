@@ -1,0 +1,121 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */       String[] ip = Console.ReadLine().Split(new char[] { ' ' });
+            int N = int.Parse(ip[0]);
+            int T = int.Parse(ip[1]);
+            UF u = new UF(N);
+            while (T-->0)
+            {
+                String[] line = Console.ReadLine().Split(new char[] { ' ' });
+                char c = char.Parse(line[0]);
+                int a,b;
+                switch (c)
+                {
+                    case 'Q':
+                        a = int.Parse(line[1]);
+                        Console.WriteLine(u.size(a));
+                        break;
+
+                    case 'M':
+                        a = int.Parse(line[1]);
+                        b = int.Parse(line[2]);
+                        u.union(a,b);
+                        break;
+                    default:
+                        break;
+                }
+            }
+    }
+    
+    public class UF
+        {
+            byte[] rank;
+            int[] parent;
+            Dictionary<int, int> groupSize;
+            int count = 0;
+            public UF(int N)
+            {
+                groupSize = new Dictionary<int, int>();
+                this.count = N;
+                rank = new byte[N + 1];
+                parent = new int[N + 1];
+                for (int i = 0; i < N+1; i++)
+                {
+                    parent[i] = i;
+                    rank[i] = 0;
+                }
+            }
+            public void union(int a, int b)
+            {
+                int i = find(a);
+                int j = find(b);
+                int father = 0, child =0;
+                if (i == j) return;
+
+                if (rank[i] < rank[j])
+                {
+                    parent[i] = j;
+                    father = j;
+                    child = i;
+                }
+                else if (rank[i] > rank[j])
+                {
+                    parent[j] = i;
+                    father = i;
+                    child = j;
+                }
+                else
+                {
+                    parent[i] = j;
+                    rank[j]++;
+                    father = j;
+                    child = i;
+                }
+                count--;
+                updateGroups(father, child);
+            }
+
+            private void updateGroups(int parent, int child)
+            {
+                bool p = groupSize.ContainsKey(parent);
+                bool c = groupSize.ContainsKey(child);
+                if (p && c)
+                    groupSize[parent] += groupSize[child];
+                else if (!p && !c)
+                    groupSize[parent] = 2;
+                else if (p)
+                    groupSize[parent] += 1;
+                else if (c)
+                    groupSize[parent] = groupSize[child];
+
+                if (c)
+                    groupSize.Remove(child);
+            }
+
+            public bool connected(int a, int b) { return find(a) == find(b); }
+            //find by rank and halving the path
+            public int find(int a)
+            {
+                while (a != parent[a])
+                {
+                    parent[a] = parent[parent[a]];
+                    a = parent[a];
+                }
+                return a;
+            }
+
+            public int size(int a)
+            {
+                int i = find(a);
+                if (groupSize.ContainsKey(i))
+                    return groupSize[i];
+                return 1;
+            }
+
+            public int size() { return this.count; }
+        }
+    
+}
