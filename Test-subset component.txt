@@ -1,0 +1,89 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+           public static void Main(string[] args)
+        //public static void FindSubsetComponents(string[] args)
+        {
+            long N = long.Parse(Console.ReadLine());
+
+            ulong[] D = 
+                    Console.ReadLine()
+                        .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(n => ulong.Parse(n))
+                        .ToArray();
+            List<Graph> q = new List<Graph>(1<<20);
+            ulong sum = 64;
+            Graph init = new Graph();
+            //init.d = new List<long>();
+            init.cc = 64;
+            q.Add(init);
+
+            for (int i = 0; i < D.Length; i++)
+            {
+                int s = q.Count;
+                
+                for (int j = 0; j < s; j++)
+                {
+                    Graph g = q[j];
+
+                    Graph newg = g.AddNode(D[i]);
+                    sum += newg.cc;
+                    q.Add(newg);
+                }
+            }
+
+            Console.WriteLine(sum);
+        }
+
+        static bool IsPowerOf2(ulong i)
+        {
+            return (i & (i - 1)) == 0;
+        }
+
+        static ulong CountBits(ulong i)
+        {
+            ulong c = 0;
+            for (int j = 0; j < 64; j++)
+            {
+                c += (i >> j) & 1;
+            }
+
+            return c;
+        }
+
+        class Graph
+        {
+            //public List<long> d;
+
+            public ulong or = 0;
+
+            public ulong cc;
+
+            internal Graph AddNode(ulong p)
+            {
+                Graph g = new Graph();
+                g.cc = this.cc;
+                //g.d = new List<long>(this.d);
+                g.or = this.or;
+
+                if (!IsPowerOf2(p))
+                {
+                    //g.d.Add(p);
+
+                    // let's find how many bits are different
+                    ulong diff = (p ^ g.or) & p;
+                    bool same = (p & g.or) != 0;
+                    g.or |= p;
+                    ulong newBitsCount = CountBits(diff);
+                    if (newBitsCount > 0)
+                    {
+                        g.cc -= (same) ? (newBitsCount) : (newBitsCount - 1);    
+                    }
+                    
+                }
+                return g;
+            }
+        }
+}
