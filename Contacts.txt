@@ -1,0 +1,87 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        Names names = new Names();
+        string nStr = Console.ReadLine();
+        int n = int.Parse(nStr);
+        for (int i = 0; i < n; i++) {
+            string operation = Console.ReadLine();
+            RunOperation(names, operation);
+        }
+    }
+
+    static void RunOperation(Names names, string operation) {
+        if (operation == null) {
+            throw new InvalidOperationException("Invalid operation " + operation);
+        }
+        if (operation.StartsWith("add") && operation.Length > 4) {
+            names.AddName(operation.Substring(4).Trim());
+        }
+        else if (operation.StartsWith("find") && operation.Length > 5) {
+            int result = names.FindCount(operation.Substring(5).Trim());
+            Console.WriteLine(result);
+        }
+        else {
+            throw new InvalidOperationException("Invalid operation " + operation);
+        }
+    }
+}
+
+class Names {
+    private Node _root;
+
+    public Names() {
+        _root = new Node(null);
+    }
+
+    public void AddName(string name) {
+        Node runner = _root;
+        foreach(var chr in name) {
+            Node next = runner.GetChildByLetter(chr);
+            if (next == null) {
+                next = runner.AddChild(chr);
+            }
+            runner = next;
+            next.Count++;
+        }
+    }
+
+    public int FindCount(string prefix) {
+        Node runner = _root;
+        foreach(var chr in prefix) {
+            Node next = runner.GetChildByLetter(chr);
+            if (next == null) {
+                return 0;
+            }
+            runner = next;
+        }
+        return runner.Count;
+    }
+}
+
+class Node {
+    public Dictionary<char, Node> Children { get; private set; }
+    public char? Letter { get; private set; }
+    public int Count { get; set; }
+
+    public Node(char? letter) {
+        Children = new Dictionary<char, Node>();
+        Letter = letter;
+    }
+
+    public Node AddChild(char chr) {
+        Node node = new Node(chr);
+        Children.Add(chr, node);
+        return node;
+    }
+
+    public Node GetChildByLetter(char chr) {
+        Node next;
+        Children.TryGetValue(chr, out next);
+        return next;
+    }
+}
