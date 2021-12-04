@@ -1,0 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    enum Direction {
+        None = 0,
+        Right,
+        Down,
+        Left,
+        Up
+    };
+    
+    static void Main(String[] args) {
+        int N = Convert.ToInt32(Console.ReadLine());
+        bool[,] map = new bool[N, N];
+        
+        for (int i = 0; i < N; ++i) {
+            string line = Console.ReadLine();
+            for (int j = 0; j < line.Length; ++j) {
+                map[i,j] = line[j] == '.' ? true : false;
+            }
+        }
+        
+        string[] temp = Console.ReadLine().Split(' ');
+        int a = Convert.ToInt32(temp[0]);
+        int b = Convert.ToInt32(temp[1]);
+        int c = Convert.ToInt32(temp[2]);
+        int d = Convert.ToInt32(temp[3]);
+        
+        int min = MaxMoves(map, N, a,b,c,d);
+        Console.WriteLine(min.ToString());
+    }
+    
+    static int MaxMoves(bool[,] map, int N, int a, int b, int c, int d) {
+        int min = int.MaxValue;
+        int[,] valueMatrix = new int[N, N];
+
+        for (int i = 0; i < N; ++i)
+            for (int j = 0; j < N; ++j)
+            valueMatrix[i, j] = int.MaxValue;
+
+        MaxMoves(map, valueMatrix, N, a, b, c, d, 0, ref min, Direction.None, 0);
+        return min;
+    }
+
+    static void MaxMoves(bool[,] map, int[,] valueMatrix, int N,
+                             int currentY, int currentX, int endY, int endX,
+                             int currentStep, ref int min, Direction direction, int recursionLevel)
+    {
+        if (currentY == endY && currentX == endX)
+        {
+            min = Math.Min(min, currentStep);
+            return;
+        }
+        if (currentStep > min)
+            return;
+        if (currentX < 0 || currentY < 0 || endY < 0 || endX < 0)
+            return;
+        if (currentX >= N || currentY >= N || endY >= N || endX >= N)
+            return;
+        if (valueMatrix[currentY, currentX] < currentStep)
+            return;
+        if (!map[currentY, currentX])
+            return;
+
+        valueMatrix[currentY, currentX] = currentStep;
+
+        // move right
+        int nextY = currentY;
+        int nextX = currentX + 1;
+        bool horOrVert = true;
+        int curValue = currentStep;
+
+        Direction newDirection = Direction.Right;
+        if (newDirection != direction)
+            curValue++;
+
+        MaxMoves(map, valueMatrix, N, nextY, nextX, endY, endX, curValue, ref min, newDirection, recursionLevel + 1);
+
+        // move down
+        nextY = currentY + 1;
+        nextX = currentX;
+        horOrVert = false;
+        curValue = currentStep;
+
+        newDirection = Direction.Down;
+        if (newDirection != direction)
+            curValue++;
+
+        MaxMoves(map, valueMatrix, N, nextY, nextX, endY, endX, curValue, ref min, newDirection, recursionLevel + 1);
+
+        // move left
+        nextY = currentY;
+        nextX = currentX - 1;
+        horOrVert = true;
+        curValue = currentStep;
+        newDirection = Direction.Left;
+        if (newDirection != direction)
+            curValue++;
+
+        MaxMoves(map, valueMatrix, N, nextY, nextX, endY, endX, curValue, ref min, newDirection, recursionLevel + 1);
+
+        // move up
+        nextY = currentY - 1;
+        nextX = currentX;
+        horOrVert = false;
+        curValue = currentStep;
+        newDirection = Direction.Up;
+        if (newDirection != direction)
+            curValue++;
+
+        MaxMoves(map, valueMatrix, N, nextY, nextX, endY, endX, curValue, ref min, newDirection, recursionLevel + 1);
+    }
+}
