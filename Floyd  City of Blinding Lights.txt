@@ -1,0 +1,285 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+class Solution {
+
+        public static void Assert(Boolean b, string msg, params Object[] args)
+        {
+            if (!b)
+            {
+                string s = string.Format(msg, args);
+                throw new Exception(s);
+            }
+        }
+
+        public class Graph
+        {
+            public class Node
+            {
+                public int Number;
+                public double Value;
+
+                public Node()
+                {
+                    Number = 0;
+                    Value = 0;
+                }
+
+                public Node(int number, double value)
+                {
+                    Number = number;
+                    Value = value;
+                }
+
+                public override string ToString()
+                {
+                    return String.Format("<Graph.Node Number={0} Value={1} />", Number, Value);
+                }
+            }
+
+            public class Edge
+            {
+                public int Item1;
+                public int Item2;
+                public int Length;
+
+                public Edge()
+                {
+                    Item1 = 0;
+                    Item2 = 0;
+                    Length = 0;
+                }
+
+                public Edge(int n1, int n2, int nLength)
+                {
+                    Item1 = n1;
+                    Item2 = n2;
+                    Length = nLength;
+                }
+
+                public override string ToString()
+                {
+                    return String.Format("<Graph.Edge Item1={0} Item2={1} Length={2} />", Item1, Item2, Length);
+                }
+            }
+
+
+            public IList<Node> Nodes
+            {
+                get { return _nodes; }
+                private set { _nodes = value; }
+            }
+
+            public IList<Edge> AllEdges
+            {
+                get { return _allEdges; }
+                private set { _allEdges = value; }
+            }
+
+            //public IList<List<Edge>> EdgesByNode
+            //{
+            //    get { return _edgesByNode; }
+            //    private set { _edgesByNode = value; }
+            //}
+
+
+            public Graph(int nNodes)
+            {
+                Nodes = new List<Node>(nNodes + 1);      // NB 1-based node numbers, we'll use a placeholder at 0
+                Nodes.Add(new Node(0, 0));               // That's him
+
+                AllEdges = new List<Edge>(nNodes + 1);
+
+                //EdgesByNode = new List<List<Edge>>(nNodes + 1);
+                //for (int n =0; n<nNodes + 1; ++n)
+                //{
+                //    EdgesByNode.Add(new List<Edge>(nNodes + 1));
+                //}
+            }
+
+            public void SetNodes(IList<Node> nodes)
+            {
+                int n = 1;
+                foreach (Node node in nodes)
+                {
+                    Assert(node.Number == n, "Error building Nodes colletion");
+
+                    Nodes.Add(node);
+
+                    Assert(Nodes[n].Number == n, "Error building Nodes colletion");
+
+                    ++n;
+                }
+            }
+
+            public void SetEdgesUnidirectional(IList<Edge> edges)
+            {
+                foreach (Edge edge in edges)
+                {
+                    Assert(Nodes[edge.Item1] != null, "No such node: {0}", edge.Item1);
+                    Assert(Nodes[edge.Item2] != null, "No such node: {0}", edge.Item2);
+
+                    IList<Edge> dupes = AllEdges.Where(e => e.Item1 == edge.Item1 && e.Item2 == edge.Item2).ToList<Edge>();
+                    if (dupes.Count() > 0)
+                    {
+                        foreach (Edge dupe in dupes)
+                        {
+                            //Debug.WriteLine("Duplicate edge: {0} replaced with {1}", dupe, edge);
+                            AllEdges.Remove(dupe);
+                        }
+                    }
+
+                    AllEdges.Add(edge);
+
+                    //IList<Edge> dupes = EdgesByNode[edge.Item1].Where(e => e.Item2 == edge.Item2).ToList<Edge>();
+                    //if (dupes.Count() > 0)
+                    //{
+                    //    foreach (Edge dupe in dupes)
+                    //    {
+                    //        //Debug.WriteLine("Duplicate edge: {0} replaced with {1}", dupe, edge);
+                    //        EdgesByNode[edge.Item1].Remove(dupe);
+                    //    }
+                    //}
+
+                    //EdgesByNode[edge.Item1].Add(edge);
+                }
+            }
+
+            private IList<Node> _nodes;
+            private IList<Edge> _allEdges;
+            //private IList<List<Edge>> _edgesByNode;
+        
+        } // class Graph
+
+        static void Main(string[] args)
+        {
+            //DoExhaustiveTests();
+
+            //do
+            //{
+            try
+            {
+                string strNM = Console.ReadLine();
+                string[] astrNM = strNM.Split(null);
+                int nNodesN = Convert.ToInt32(astrNM[0]);
+                int nEdgesM = Convert.ToInt32(astrNM[1]);
+
+                List<Graph.Node> nodes = new List<Graph.Node>();
+                for (int n = 0; n < nNodesN; ++n)
+                {
+                    Graph.Node node = new Graph.Node(n + 1, 0.0);
+                    nodes.Add(node);
+                }
+
+                IList<Graph.Edge> edges = new List<Graph.Edge>();
+                for (int m = 0; m < nEdgesM; ++m)
+                {
+                    string strEdge = Console.ReadLine();
+                    string[] astrEdge = strEdge.Split(null);
+
+                    int n1 = Convert.ToInt32(astrEdge[0]);
+                    int n2 = Convert.ToInt32(astrEdge[1]);
+                    int nR = Convert.ToInt32(astrEdge[2]);
+
+                    Graph.Edge e = new Graph.Edge(n1, n2, nR);
+                    edges.Add(e);
+                }
+
+                string strQ = Console.ReadLine();
+                int nQueriesQ = Convert.ToInt32(strQ);
+
+                IList<Tuple<int, int>> queries = new List<Tuple<int, int>>();
+                for (int q = 0; q < nQueriesQ; ++q)
+                {
+                    string strQuery = Console.ReadLine();
+                    string[] astrQuery = strQuery.Split(null);
+
+                    int n1 = Convert.ToInt32(astrQuery[0]);
+                    int n2 = Convert.ToInt32(astrQuery[1]);
+
+                    queries.Add(Tuple.Create<int, int>(n1, n2));
+                }
+
+                //Debug.WriteLine(String.Format("{0}.{1}  Beginning calculation...", DateTime.Now.ToLongTimeString(), DateTime.Now.Millisecond));
+
+                Graph g = new Graph(nNodesN + 1);        // 1-based
+                g.SetNodes(nodes);
+                g.SetEdgesUnidirectional(edges);
+
+                // Floyd
+                int[][] aanDistances = new int[nNodesN + 1][];        // 1-based
+                for (int n = 0; n < nNodesN + 1; ++n)
+                {
+                    aanDistances[n] = new int[nNodesN + 1];        // 1-based
+                }
+
+                for (int i = 1; i < nNodesN + 1; ++i)
+                {
+                    for (int j = 1; j < nNodesN + 1; ++j)
+                    {
+                        aanDistances[i][j] = int.MaxValue;
+                    }
+                }
+
+                for (int n = 0; n < nNodesN + 1; ++n)
+                {
+                    aanDistances[n][n] = 0;
+                }
+
+
+                foreach (Graph.Edge edge in g.AllEdges)
+                {
+                    aanDistances[edge.Item1][edge.Item2] = edge.Length;
+                }
+
+                for (int k = 1; k < nNodesN + 1; ++k)
+                {
+                    for (int i = 1; i < nNodesN + 1; ++i)
+                    {
+                        for (int j = 1; j < nNodesN + 1; ++j)
+                        {
+                            if ((aanDistances[i][k] != int.MaxValue) && (aanDistances[k][j] != int.MaxValue))
+                            {
+                                if (aanDistances[i][j] > aanDistances[i][k] + aanDistances[k][j])
+                                {
+                                    aanDistances[i][j] = aanDistances[i][k] + aanDistances[k][j];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                StringBuilder sb = new StringBuilder();
+                foreach (Tuple<int, int> tu in queries)
+                {
+                    int n = tu.Item1;
+
+                    int nDistance = aanDistances[n][tu.Item2];
+                    //Debug.WriteLine("{0}", nDistance);
+
+                    if (nDistance != int.MaxValue)
+                    {
+                        sb.AppendFormat("{0}\r\n", nDistance);
+                    }
+                    else
+                    {
+                        sb.Append("-1\r\n");
+                    }
+                }
+                Console.WriteLine(sb.ToString());
+
+                //Debug.WriteLine(String.Format("{0}.{1} ...and done", DateTime.Now.ToLongTimeString(), DateTime.Now.Millisecond));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            //} while (true);
+
+        } // Main
+    
+}
