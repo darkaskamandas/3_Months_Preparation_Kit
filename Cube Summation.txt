@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        
+        int T=Convert.ToInt32(Console.ReadLine());
+        
+        for (int i=0;i<T;i++){
+            string[] parts=Console.ReadLine().Split(' ');
+            
+            int N=Convert.ToInt32(parts[0]);
+            int M=Convert.ToInt32(parts[1]);
+            
+            int[][][] matrica=new int[N][][];
+            
+            for (int j=0;j<N;j++){
+                matrica[j]=new int[N][];
+                
+                for (int k=0;k<N;k++){
+                    matrica[j][k]=new int[N];
+                }
+            }
+            
+            List<string> operacije=new List<string>();
+            
+            List<int> x1s=new List<int>();
+            List<int> y1s=new List<int>();
+            List<int> z1s=new List<int>();
+            List<int> x2s=new List<int>();
+            List<int> y2s=new List<int>();
+            List<int> z2s=new List<int>();
+            
+            for (int j=0;j<M;j++){
+                string s=Console.ReadLine();
+                
+                operacije.Add(s);
+                
+                parts=s.Split(' ');
+                
+                if (parts[0]=="QUERY"){
+                    int x1=Convert.ToInt32(parts[1])-1;
+                    int y1=Convert.ToInt32(parts[2])-1;
+                    int z1=Convert.ToInt32(parts[3])-1;
+                    int x2=Convert.ToInt32(parts[4])-1;
+                    int y2=Convert.ToInt32(parts[5])-1;
+                    int z2=Convert.ToInt32(parts[6])-1;
+                    
+                    x1s.Add(x1);
+                    y1s.Add(y1);
+                    z1s.Add(z1);
+                    x2s.Add(x2);
+                    y2s.Add(y2);
+                    z2s.Add(z2);
+                }
+            }
+            
+            List<Int64> zbroj=new List<Int64>();
+            
+            for (int j=0;j<x1s.Count;j++){
+                zbroj.Add(0);
+            }
+            
+            int index=0;
+            
+            for (int j=0;j<M;j++){
+                parts=operacije[j].Split(' ');
+                
+                if (parts[0]=="UPDATE"){
+                    int x=Convert.ToInt32(parts[1])-1;
+                    int y=Convert.ToInt32(parts[2])-1;
+                    int z=Convert.ToInt32(parts[3])-1;
+                    int w=Convert.ToInt32(parts[4]);
+                    
+                    for (int k=0;k<x1s.Count;k++){
+                        if (x>=x1s[k] && x<=x2s[k] && y>=y1s[k] && y<=y2s[k] && z>=z1s[k] && z<=z2s[k]){
+                            zbroj[k]-=matrica[x][y][z];
+                            zbroj[k]+=w;                            
+                        }
+                    }
+                    
+                    matrica[x][y][z]=w;
+                }
+                else{
+                    Console.WriteLine(zbroj[index]);
+                    index++;
+                }
+            }
+        }
+    }
+}
